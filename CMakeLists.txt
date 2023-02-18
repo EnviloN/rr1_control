@@ -30,8 +30,17 @@ ament_python_install_package(${PROJECT_NAME})
 # Install Python executables
 install(PROGRAMS
   scripts/angles_converter.py
-  scripts/controller_test.py
+  scripts/switch_controllers.py
+  scripts/forward_position_command.py
+  scripts/test_forward_position_controller.py
+  scripts/test_joint_trajectory_controller.py
   DESTINATION lib/${PROJECT_NAME}
+)
+
+install(DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME}
 )
 
 ament_package()

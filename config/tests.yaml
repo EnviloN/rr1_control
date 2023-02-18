@@ -1,0 +1,45 @@
+forward_position_controller_test_publisher:
+  ros__parameters:
+
+    timer_period: 1
+
+    goal_names: ["pos1", "pos2", "pos3", "pos4", "pos5", "pos6"]
+    pos1: [-2.25, -0.55,  1.30,  0.05,  2.95,  1.25]
+    pos2: [-0.35, -0.40,  1.15, -1.15,  1.80, -1.20]
+    pos3: [ 1.40,  1.10,  0.95,  0.95,  2.65, -0.60]
+    pos4: [-2.60,  0.70, -1.10, -0.50,  1.40,  0.50]
+    pos5: [-0.80, -0.93,  0.70,  0.00,  1.10, -0.15]
+    pos6: [ 0.00,  0.00,  0.00,  0.00,  0.00,  0.00]
+
+
+joint_trajectory_controller_test_publisher:
+  ros__parameters:
+
+    timer_period: 6
+
+    goal_names: ["pos1", "pos2", "pos3", "pos4", "pos5", "pos6"]
+    pos1: [-2.25, -0.55,  1.30,  0.05,  2.95,  1.25]
+    pos2: [-0.35, -0.40,  1.15, -1.15,  1.80, -1.20]
+    pos3: [ 1.40,  1.10,  0.95,  0.95,  2.65, -0.60]
+    pos4: [-2.60,  0.70, -1.10, -0.50,  1.40,  0.50]
+    pos5: [-0.80, -0.93,  0.70,  0.00,  1.10, -0.15]
+    pos6: [ 0.00,  0.00,  0.00,  0.00,  0.00,  0.00]
+
+    joints:
+      - shoulder_joint
+      - upper_arm_joint
+      - elbow_joint
+      - forearm_joint
+      - wrist_joint
+      - hand_joint
+
+    # Refuse to start sending trajectories if robot is not
+    # in the defined initial position
+    check_initial_position: true
+    initial_position_limits:
+      shoulder_joint:  [-0.01, 0.01]
+      upper_arm_joint: [-0.01, 0.01]
+      elbow_joint:     [-0.01, 0.01]
+      forearm_joint:   [-0.01, 0.01]
+      wrist_joint:     [-0.01, 0.01]
+      hand_joint:      [-0.01, 0.01]
