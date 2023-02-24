@@ -13,6 +13,8 @@ CONTROLLER_TOPIC = "/joint_trajectory_controller/joint_trajectory"
 PARAMETER_STRING = rclpy.Parameter.Type.STRING
 PARAMETER_DOUBLE_ARRAY = rclpy.Parameter.Type.DOUBLE_ARRAY
 
+TO_NS = 1e+9
+
 class TestJointTrajectoryNode(Node):
     def __init__(self):
         super().__init__('test_joint_trajectory_controller_node')
@@ -29,7 +31,8 @@ class TestJointTrajectoryNode(Node):
     def _initialize_parameters(self):
         # Declare all parameters
         self._dynamic_typing = ParameterDescriptor(dynamic_typing=True)
-        self.declare_parameter("timer_period", 6)
+        self.declare_parameter("timer_period", 6.0)
+        self.declare_parameter("motion_duration", 4.0)
         self.declare_parameter("goal_names", ["pos1", "pos2"])
         self.declare_parameter("joints", "", self._dynamic_typing)
         self.declare_parameter("check_initial_position", False)
@@ -37,6 +40,7 @@ class TestJointTrajectoryNode(Node):
 
         # Read parameters
         self._timer_period = self.get_parameter("timer_period").value
+        self._motion_duration = self.get_parameter("motion_duration").value
         goal_names = self.get_parameter("goal_names").value
         self._joints = self.get_parameter("joints").value
         self._initial_check = self.get_parameter("check_initial_position").value
@@ -90,7 +94,7 @@ class TestJointTrajectoryNode(Node):
             
             point = JointTrajectoryPoint()
             point.positions = self._positions[self._idx]
-            point.time_from_start = Duration(sec=4)
+            point.time_from_start = Duration(nanosec=(int)(self._motion_duration * TO_NS))
 
             self.get_logger().info(f'Publishing: "{point.positions}"')
             trajectory.points.append(point)

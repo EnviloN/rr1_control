@@ -15,7 +15,8 @@ forward_position_controller_test_publisher:
 joint_trajectory_controller_test_publisher:
   ros__parameters:
 
-    timer_period: 6
+    timer_period: 6.0
+    motion_duration: 4.0
 
     goal_names: ["pos1", "pos2", "pos3", "pos4", "pos5", "pos6"]
     pos1: [-2.25, -0.55,  1.30,  0.05,  2.95,  1.25]
@@ -35,7 +36,7 @@ joint_trajectory_controller_test_publisher:
 
     # Refuse to start sending trajectories if robot is not
     # in the defined initial position
-    check_initial_position: true
+    check_initial_position: false
     initial_position_limits:
       shoulder_joint:  [-0.01, 0.01]
       upper_arm_joint: [-0.01, 0.01]
