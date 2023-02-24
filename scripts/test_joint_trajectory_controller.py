@@ -24,6 +24,9 @@ class TestJointTrajectoryNode(Node):
             f"Publishing {len(self._positions)} goals on topic '{CONTROLLER_TOPIC}' every {self._timer_period} seconds."
         )
 
+        self._seconds = (int)(self._motion_duration)
+        self._nanoseconds = (int)((self._motion_duration - self._seconds) * TO_NS)
+
         self._idx = 0
         self._publisher = self.create_publisher(JointTrajectory, CONTROLLER_TOPIC, 1)
         self._timer = self.create_timer(self._timer_period, self._timer_callback)
@@ -94,7 +97,8 @@ class TestJointTrajectoryNode(Node):
             
             point = JointTrajectoryPoint()
             point.positions = self._positions[self._idx]
-            point.time_from_start = Duration(nanosec=(int)(self._motion_duration * TO_NS))
+            
+            point.time_from_start = Duration(sec=self._seconds, nanosec=self._nanoseconds)
 
             self.get_logger().info(f'Publishing: "{point.positions}"')
             trajectory.points.append(point)
