@@ -29,7 +29,6 @@ ament_python_install_package(${PROJECT_NAME})
 
 # Install Python executables
 install(PROGRAMS
-  scripts/angles_converter.py
   scripts/switch_controllers.py
   scripts/forward_position_command.py
   scripts/test_forward_position_controller.py
