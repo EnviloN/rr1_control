@@ -6,7 +6,7 @@ from ament_index_python.packages import get_package_share_directory
 
 CONTROL_PKG = "rr1_control"
 
-CONFIG_NAME = "tests"
+CONFIG_NAME = "tests_grip"
 CONFIG_FILE = f"{CONFIG_NAME}.yaml"
 
 def generate_launch_description():
