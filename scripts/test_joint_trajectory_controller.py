@@ -7,8 +7,6 @@ from builtin_interfaces.msg import Duration
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from sensor_msgs.msg import JointState
 
-CONTROLLER_TOPIC = "/joint_trajectory_controller/joint_trajectory"
-
 # https://docs.ros2.org/foxy/api/rcl_interfaces/msg/ParameterType.html
 PARAMETER_STRING = rclpy.Parameter.Type.STRING
 PARAMETER_DOUBLE_ARRAY = rclpy.Parameter.Type.DOUBLE_ARRAY
@@ -21,14 +19,14 @@ class TestJointTrajectoryNode(Node):
         self._initialize_parameters()
         
         self.get_logger().info(
-            f"Publishing {len(self._positions)} goals on topic '{CONTROLLER_TOPIC}' every {self._timer_period} seconds."
+            f"Publishing {len(self._positions)} goals on topic '{self.topic_name}' every {self._timer_period} seconds."
         )
 
         self._seconds = (int)(self._motion_duration)
         self._nanoseconds = (int)((self._motion_duration - self._seconds) * TO_NS)
 
         self._idx = 0
-        self._publisher = self.create_publisher(JointTrajectory, CONTROLLER_TOPIC, 1)
+        self._publisher = self.create_publisher(JointTrajectory, self.topic_name, 1)
         self._timer = self.create_timer(self._timer_period, self._timer_callback)
 
     def _initialize_parameters(self):
@@ -40,6 +38,7 @@ class TestJointTrajectoryNode(Node):
         self.declare_parameter("joints", "", self._dynamic_typing)
         self.declare_parameter("check_initial_position", False)
         self.declare_parameter("initial_position_limits", "", self._dynamic_typing)
+        self.declare_parameter("topic_name", "/rr1/joint_trajectory_controller/joint_trajectory")
 
         # Read parameters
         self._timer_period = self.get_parameter("timer_period").value
@@ -47,6 +46,7 @@ class TestJointTrajectoryNode(Node):
         goal_names = self.get_parameter("goal_names").value
         self._joints = self.get_parameter("joints").value
         self._initial_check = self.get_parameter("check_initial_position").value
+        self.topic_name = self.get_parameter("topic_name").value
 
         if self._joints is None or len(self._joints) == 0:
             raise Exception("Parameter 'joints' is not set!")

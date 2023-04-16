@@ -1,6 +1,9 @@
 import os
 from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
+
 
 from ament_index_python.packages import get_package_share_directory
 
@@ -13,8 +16,15 @@ def generate_launch_description():
     control_pkg = get_package_share_directory(CONTROL_PKG)
     config_path = os.path.join(control_pkg, "config", CONFIG_FILE)
 
+    topic = LaunchConfiguration('topic')
+    declare_topic_cmd = DeclareLaunchArgument(
+        'topic',
+        default_value='/rr1/forward_position_controller/commands',
+        description='')
+    
     return LaunchDescription(
         [
+            declare_topic_cmd,
             Node(
                 package="rr1_control",
                 executable="test_forward_position_controller.py",
