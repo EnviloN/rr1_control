@@ -1,11 +1,8 @@
-import os
 from launch import LaunchDescription
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch.actions import DeclareLaunchArgument
 from launch_ros.actions import Node
-
-
-from ament_index_python.packages import get_package_share_directory
+from launch_ros.substitutions import FindPackageShare
 
 CONTROL_PKG = "rr1_control"
 
@@ -13,8 +10,9 @@ CONFIG_NAME = "tests_grip"
 CONFIG_FILE = f"{CONFIG_NAME}.yaml"
 
 def generate_launch_description():
-    control_pkg = get_package_share_directory(CONTROL_PKG)
-    config_path = os.path.join(control_pkg, "config", CONFIG_FILE)
+    config_path = PathJoinSubstitution([
+        FindPackageShare(CONTROL_PKG), "config", CONFIG_FILE
+        ])
 
     topic = LaunchConfiguration('topic')
     declare_topic_cmd = DeclareLaunchArgument(
@@ -29,7 +27,10 @@ def generate_launch_description():
                 package="rr1_control",
                 executable="test_forward_position_controller.py",
                 name="forward_position_controller_test_publisher",
-                parameters=[config_path],
+                parameters=[
+                    {"topic_name": topic},
+                    config_path
+                ],
                 output="both"
             )
         ]
